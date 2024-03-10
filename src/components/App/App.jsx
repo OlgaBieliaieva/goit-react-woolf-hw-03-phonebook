@@ -1,18 +1,40 @@
 import React, { Component } from 'react';
 import shortid from 'shortid';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import SectionTitle from '../SectionTitle/SectionTitle';
 import ContactForm from '../ContactForm/ContactForm';
 import Filter from '../Filter/Filter';
 import ContactList from '../ContactList/ContactList';
-import contacts from '../../contacts.json';
 import css from './App.module.css';
 
 class App extends Component {
-  
   state = {
-    contacts: contacts,
+    contacts: [],
     filter: '',
   };
+
+  componentDidMount() {
+    try {
+      const savedContacts = localStorage.getItem('contacts');
+      const parsedContacts = JSON.parse(savedContacts);
+
+      if (parsedContacts !== null) {
+        this.setState({ contacts: parsedContacts });
+      }
+    } catch (error) {
+      Notify.failure(error.message);
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    try {
+      if (prevState.contacts.length !== this.state.contacts.length) {
+        localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+      }
+    } catch (error) {
+      Notify.failure(error.message);
+    }
+  }
 
   addContact = ({ name, number }) => {
     const contact = {

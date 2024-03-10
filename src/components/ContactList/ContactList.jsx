@@ -1,7 +1,7 @@
 import css from './ContactList.module.css';
 
 const ContactList = ({ contacts, query, onDeleteContact }) => {
-  return (
+  return contacts.length > 0 ? (
     <ul className={css.contactList}>
       {contacts
         .filter(contact =>
@@ -23,6 +23,11 @@ const ContactList = ({ contacts, query, onDeleteContact }) => {
           );
         })}
     </ul>
+  ) : (
+    <p className={css.contactListDefault}>
+      Sorry, your phonebook is empty. <br></br>
+      Add your first contact, please.
+    </p>
   );
 };
 
